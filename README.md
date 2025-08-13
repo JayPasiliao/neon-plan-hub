@@ -1,73 +1,187 @@
-# Welcome to your Lovable project
+# Home Design & Planning Hub
 
-## Project info
+A modern, income-ready web application for architecture and construction planning, built with React, Vite, TypeScript, and Tailwind CSS.
 
-**URL**: https://lovable.dev/projects/58b2ab15-672f-4390-a54a-4302635f75a7
+## 🚀 Features
 
-## How can I edit this code?
+- **Dark Neon Design**: Modern UI with lime accent colors and grid backgrounds
+- **Monetization Ready**: AdSense integration and affiliate product system
+- **Professional Tools**: Construction calculators and planning tools
+- **Content Management**: Blog system with auto-publishing
+- **SEO Optimized**: Meta tags, structured data, and performance optimized
 
-There are several ways of editing your application.
+## 💰 Monetization Features
 
-**Use Lovable**
+### AdSense Integration
+Set your AdSense client ID to enable ads:
+```bash
+# Add to your environment
+VITE_ADSENSE_CLIENT=ca-pub-your-client-id
+```
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/58b2ab15-672f-4390-a54a-4302635f75a7) and start prompting.
+Ad slots are automatically placed:
+- Home page: after hero, after tools, after guides
+- Blog list: top and bottom of page
+- Blog posts: after intro and near end
+- Tools page: between calculators
 
-Changes made via Lovable will be committed automatically to this repo.
+### Affiliate System
+Edit `/src/data/affiliates.json` to add your affiliate products:
+```json
+{
+  "sku": "unique-id",
+  "title": "Product Name",
+  "url": "https://affiliate-link.com",
+  "image": "product-image-url",
+  "price": "₱1,299",
+  "source": "Lazada"
+}
+```
 
-**Use your preferred IDE**
+Add `affiliateSkus` to blog post frontmatter to display products:
+```yaml
+affiliateSkus: ["lazada-laser-meter", "shopee-wall-table"]
+```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## 📝 Blog & Content
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Auto-Publishing
+Posts with `publishAt` dates in the future remain hidden until the publish date. The system automatically shows only published content.
 
-Follow these steps:
+### Blog Structure
+- Posts: `/src/content/posts/*.mdx`
+- Frontmatter required: `title`, `excerpt`, `coverImage`, `publishAt`, `tags`
+- Optional: `affiliateSkus` for product recommendations
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Generate Bulk Posts
+```bash
+npm run gen:posts
+```
+Creates 40+ posts from topics in `/src/data/topics.json`, scheduled every 2-3 days starting tomorrow.
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## 🛠️ Tools
 
-# Step 3: Install the necessary dependencies.
-npm i
+The tools page includes three calculators:
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+1. **Lot to Sample Plan**: Estimates usable area and suggests layouts
+2. **Room Dimension Calculator**: Calculates area and furniture recommendations  
+3. **Construction Budget Estimator**: Estimates costs with PHP/USD conversion
+
+## 📊 Analytics & SEO
+
+### Google Analytics
+```bash
+VITE_GA_ID=GA_MEASUREMENT_ID
+```
+
+### SEO Features
+- Automatic meta tags and Open Graph
+- Semantic HTML structure
+- Performance optimized images
+- Clean URLs and proper navigation
+
+## 🚀 Development
+
+### Setup
+```bash
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+### Environment Variables
+```bash
+# Optional - for monetization
+VITE_ADSENSE_CLIENT=ca-pub-your-client-id
+VITE_GA_ID=GA_MEASUREMENT_ID
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Build
+```bash
+npm run build
+npm run preview
+```
 
-**Use GitHub Codespaces**
+## 📁 Project Structure
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```
+src/
+├── components/          # Reusable UI components
+├── pages/              # Route components
+├── data/               # JSON data files
+├── content/posts/      # Blog posts (MDX)
+├── lib/               # Utilities and helpers
+└── assets/            # Images and static files
 
-## What technologies are used for this project?
+scripts/
+└── generate-posts.ts   # Bulk post generator
+```
 
-This project is built with:
+## 🎨 Design System
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+The design uses semantic tokens defined in `src/index.css`:
+- Colors: HSL values for dark neon theme
+- Gradients: Accent-based gradients
+- Typography: Inter (body) + Plus Jakarta Sans (headings)
+- Components: Consistent spacing and hover effects
 
-## How can I deploy this project?
+## 🌐 Deployment
 
-Simply open [Lovable](https://lovable.dev/projects/58b2ab15-672f-4390-a54a-4302635f75a7) and click on Share -> Publish.
+### Vercel (Recommended)
+1. Connect your GitHub repository
+2. Set environment variables in Vercel dashboard
+3. Deploy automatically on push
 
-## Can I connect a custom domain to my Lovable project?
+### Build Outputs
+- Static files: `dist/`
+- Optimized for modern browsers
+- Code splitting and lazy loading enabled
 
-Yes, you can!
+## 📈 Income Optimization
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### AdSense Best Practices
+- Content quality drives approval and revenue
+- Strategic ad placement for user experience
+- Mobile-optimized responsive ads
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+### Affiliate Strategy
+- Choose products relevant to your audience
+- Honest reviews and recommendations
+- Clear disclosure of affiliate relationships
+
+### Content Strategy
+- Regular publishing schedule (automated)
+- SEO-optimized content
+- Local market focus (Philippines)
+
+## 🔧 Customization
+
+### Adding New Tools
+1. Create calculator component in `/src/pages/Tools.tsx`
+2. Add form inputs and calculation logic
+3. Style with existing design system
+
+### Custom Affiliate Sources
+1. Update `/src/data/affiliates.json`
+2. Add new source logos/branding
+3. Update tracking parameters
+
+### Blog Customization
+1. Modify post templates in `/scripts/generate-posts.ts`
+2. Add new topics in `/src/data/topics.json`
+3. Customize styling in blog components
+
+## 📄 License
+
+MIT License - feel free to use for commercial projects.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create feature branch
+3. Commit changes
+4. Push to branch
+5. Open pull request
+
+---
+
+Built with ❤️ for the Philippine construction and design community.

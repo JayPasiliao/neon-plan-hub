@@ -1,0 +1,50 @@
+[
+  {
+    "sku": "lazada-laser-meter",
+    "title": "Digital Laser Distance Meter 40M",
+    "url": "https://lazada.com.ph/products/laser-distance-meter",
+    "image": "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=300&h=300&fit=crop",
+    "price": "₱1,299",
+    "source": "Lazada"
+  },
+  {
+    "sku": "shopee-wall-table",
+    "title": "Foldable Wall Mounted Table",
+    "url": "https://shopee.ph/foldable-wall-table",
+    "image": "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=300&h=300&fit=crop",
+    "price": "₱2,450",
+    "source": "Shopee"
+  },
+  {
+    "sku": "amazon-digital-level",
+    "title": "Digital Spirit Level with LCD Display",
+    "url": "https://amazon.com/digital-spirit-level",
+    "image": "https://images.unsplash.com/photo-1609081219090-a6d81d3085bf?w=300&h=300&fit=crop",
+    "price": "$45.99",
+    "source": "Amazon"
+  },
+  {
+    "sku": "lazada-tape-measure",
+    "title": "Heavy Duty Steel Tape Measure 10M",
+    "url": "https://lazada.com.ph/products/tape-measure",
+    "image": "https://images.unsplash.com/photo-1609081219276-f99ee7ad9e21?w=300&h=300&fit=crop",
+    "price": "₱850",
+    "source": "Lazada"
+  },
+  {
+    "sku": "shopee-drill-set",
+    "title": "21-Piece Cordless Drill Set",
+    "url": "https://shopee.ph/cordless-drill-set",
+    "image": "https://images.unsplash.com/photo-1609081219090-a6d81d3085bf?w=300&h=300&fit=crop",
+    "price": "₱3,200",
+    "source": "Shopee"
+  },
+  {
+    "sku": "amazon-stud-finder",
+    "title": "Electronic Stud Finder Wall Scanner",
+    "url": "https://amazon.com/stud-finder-wall-scanner",
+    "image": "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=300&h=300&fit=crop",
+    "price": "$29.99",
+    "source": "Amazon"
+  }
+]
