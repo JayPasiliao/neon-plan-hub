@@ -1,0 +1,56 @@
+[
+  {
+    "sku": "lz-meter-01",
+    "title": "Laser Distance Meter",
+    "description": "Professional laser distance meter for accurate measurements up to 100m",
+    "url": "https://www.lazada.com/product/laser-meter",
+    "image": "/images/aff/laser.jpg",
+    "price": "₱899",
+    "source": "lazada"
+  },
+  {
+    "sku": "sp-foldtable-01",
+    "title": "Foldable Wall Table",
+    "description": "Space-saving foldable table perfect for small homes and apartments",
+    "url": "https://shopee.ph/product/fold-wall-table",
+    "image": "/images/aff/table.jpg",
+    "price": "₱1,299",
+    "source": "shopee"
+  },
+  {
+    "sku": "am-level-01",
+    "title": "Digital Level",
+    "description": "Precision digital level for professional construction and DIY projects",
+    "url": "https://amazon.com/dp/B00LEVEL",
+    "image": "/images/aff/level.jpg",
+    "price": "$24.99",
+    "source": "amazon"
+  },
+  {
+    "sku": "hd-tape-01",
+    "title": "Professional Measuring Tape",
+    "description": "25ft retractable measuring tape with magnetic tip and lock mechanism",
+    "url": "https://www.lazada.com/product/measuring-tape",
+    "image": "/images/aff/tape.jpg",
+    "price": "₱299",
+    "source": "lazada"
+  },
+  {
+    "sku": "sp-drawer-01",
+    "title": "Under-Bed Storage Drawer",
+    "description": "Maximize space with under-bed storage drawers for small bedrooms",
+    "url": "https://shopee.ph/product/under-bed-storage",
+    "image": "/images/aff/drawer.jpg",
+    "price": "₱799",
+    "source": "shopee"
+  },
+  {
+    "sku": "am-paint-01",
+    "title": "Interior Paint Set",
+    "description": "Premium interior paint with primer, perfect for home renovation projects",
+    "url": "https://amazon.com/dp/B00PAINT",
+    "image": "/images/aff/paint.jpg",
+    "price": "$89.99",
+    "source": "amazon"
+  }
+]

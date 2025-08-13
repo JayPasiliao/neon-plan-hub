@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import Tools from "./pages/Tools";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
+import AIDesigner from "./pages/AIDesigner";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -54,6 +55,7 @@ const App = () => {
             <Route path="/tools" element={<Tools />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogPost />} />
+            <Route path="/ai-designer" element={<AIDesigner />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

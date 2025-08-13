@@ -17,6 +17,7 @@ export const SiteHeader = () => {
   const navItems = [
     { label: "Blog", href: "/blog" },
     { label: "Tools", href: "/tools" },
+    { label: "AI Designer", href: "/ai-designer" },
     { label: "How it works", href: "#features" },
     { label: "Contact", href: "#contact" },
   ];

@@ -1,79 +1,61 @@
-import { useParams } from "react-router-dom";
+import { useParams, Navigate } from "react-router-dom";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Container } from "@/components/Container";
 import { Badge } from "@/components/Badge";
 import { AdSlot } from "@/components/AdSlot";
 import { AffiliateCard } from "@/components/AffiliateCard";
+import { getPostBySlug } from "@/lib/posts";
 import { getAffiliatesBySkus } from "@/lib/affiliates";
-
-// Mock post data - in real app this would be from MDX
-const mockPost = {
-  slug: "maximizing-small-lot-design",
-  title: "Maximizing Small Lot Design in Metro Manila",
-  excerpt: "Complete guide to designing functional homes on small urban lots in Metro Manila",
-  coverImage: "/images/small-lot-design.jpg",
-  publishAt: "2024-12-01T10:00:00Z",
-  tags: ["small-spaces", "urban", "philippines"],
-  affiliateSkus: ["lazada-laser-meter", "shopee-wall-table"],
-  content: `# Maximizing Small Lot Design in Metro Manila
-
-Building on a small lot in Metro Manila presents unique challenges, but with smart design strategies, you can create a functional and beautiful home that maximizes every square meter.
-
-## Key Takeaways
-
-- **Vertical design** is essential for small lots
-- **Multi-functional spaces** double your usable area
-- **Proper ventilation** is crucial in dense urban areas
-- **Storage solutions** should be built into the design
-- **Natural light** optimization makes spaces feel larger
-
-## Cost Estimation Table
-
-| Area (sqm) | Basic Finish | Standard Finish | Premium Finish |
-|------------|--------------|-----------------|----------------|
-| 30         | ₱510,000     | ₱690,000        | ₱960,000       |
-| 40         | ₱680,000     | ₱920,000        | ₱1,280,000     |
-| 50         | ₱850,000     | ₱1,150,000      | ₱1,600,000     |
-
-*Prices are estimates and may vary by location and contractor*
-
-## Practical Design Tips
-
-### 1. Embrace Vertical Living
-- Use loft beds to create room underneath
-- Install floor-to-ceiling storage
-- Consider a mezzanine for additional space
-
-### 2. Multi-Purpose Rooms
-- Dining areas that convert to workspaces
-- Living rooms with built-in storage benches
-- Bedrooms with fold-out desks
-
-### 3. Outdoor Integration
-- Extend living spaces to balconies
-- Use outdoor kitchens to save indoor space
-- Create vertical gardens for privacy
-
-## Conclusion
-
-Small lot design in Metro Manila requires creativity and careful planning, but the results can be both functional and beautiful. Focus on vertical solutions, multi-purpose spaces, and smart storage to make the most of your available space.`
-};
+import { useEffect, useState } from "react";
+import { Post } from "@/lib/posts";
 
 const BlogPost = () => {
   const { slug } = useParams();
-  
-  // In real app, you'd fetch the post by slug and check if publishAt is in the future
-  const post = mockPost;
+  const [post, setPost] = useState<Post | null>(null);
+  const [affiliates, setAffiliates] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (slug) {
+      const fetchedPost = getPostBySlug(slug);
+      if (fetchedPost) {
+        setPost(fetchedPost);
+        
+        // Check if post is published
+        const now = new Date();
+        const publishDate = new Date(fetchedPost.publishAt);
+        
+        if (publishDate <= now && fetchedPost.affiliateSkus) {
+          getAffiliatesBySkus(fetchedPost.affiliateSkus).then(setAffiliates);
+        }
+      }
+      setLoading(false);
+    }
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-accent mx-auto mb-4"></div>
+          <p className="text-text-muted">Loading post...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!post) {
+    return <Navigate to="/404" replace />;
+  }
+
+  // Check if post is published
   const now = new Date();
   const publishDate = new Date(post.publishAt);
   
-  // Return 404 if post is not published yet
   if (publishDate > now) {
-    return <div>404 - Post not found</div>;
+    return <Navigate to="/404" replace />;
   }
-
-  const affiliates = post.affiliateSkus ? getAffiliatesBySkus(post.affiliateSkus) : [];
 
   return (
     <div className="min-h-screen bg-background">
@@ -117,22 +99,20 @@ const BlogPost = () => {
 
             {/* Content */}
             <div className="prose prose-lg max-w-none">
-              <div 
-                className="text-text leading-relaxed space-y-6"
-                dangerouslySetInnerHTML={{ 
-                  __html: post.content
-                    .replace(/^# /gm, '<h1 class="font-heading text-3xl font-bold text-text mb-6 mt-8">')
-                    .replace(/^## /gm, '<h2 class="font-heading text-2xl font-bold text-text mb-4 mt-8">')
-                    .replace(/^### /gm, '<h3 class="font-heading text-xl font-semibold text-text mb-3 mt-6">')
-                    .replace(/^\*\*([^*]+)\*\*/gm, '<strong class="text-accent">$1</strong>')
-                    .replace(/^- /gm, '<li class="text-text-muted ml-4">')
-                    .replace(/\n\n/g, '</p><p class="mb-4">')
-                    .replace(/^\|(.+)\|$/gm, (match, content) => {
-                      const cells = content.split('|').map((cell: string) => cell.trim());
-                      return `<tr>${cells.map((cell: string) => `<td class="border border-border px-4 py-2">${cell}</td>`).join('')}</tr>`;
-                    })
-                }}
-              />
+              <div className="text-text leading-relaxed space-y-6">
+                {/* For now, we'll show a placeholder since MDX content isn't fully integrated */}
+                <div className="bg-muted/20 p-6 rounded-lg text-center">
+                  <p className="text-text-muted mb-4">
+                    MDX content integration coming soon. This post would display the full content here.
+                  </p>
+                  <div className="text-sm text-text-muted space-y-2">
+                    <p><strong>Title:</strong> {post.title}</p>
+                    <p><strong>Excerpt:</strong> {post.excerpt}</p>
+                    <p><strong>Tags:</strong> {post.tags.join(', ')}</p>
+                    <p><strong>Reading Time:</strong> {post.readingTime} minutes</p>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Affiliate Products */}

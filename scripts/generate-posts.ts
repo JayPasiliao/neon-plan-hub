@@ -1,161 +1,142 @@
 import fs from 'fs';
 import path from 'path';
-import topicsData from '../src/data/topics.json';
-import affiliatesData from '../src/data/affiliates.json';
 
 interface Topic {
   title: string;
   tags: string[];
+  excerpt: string;
 }
 
-const topics: Topic[] = topicsData;
-const affiliates = affiliatesData;
+interface AffiliateProduct {
+  sku: string;
+  title: string;
+  description?: string;
+  url: string;
+  image: string;
+  price?: string;
+  source: string;
+}
 
-const generateSlug = (title: string): string => {
+// Load topics and affiliates
+const topicsPath = path.join(process.cwd(), 'content', 'topics.json');
+const affiliatesPath = path.join(process.cwd(), 'public', 'data', 'affiliates.json');
+const postsDir = path.join(process.cwd(), 'content', 'posts');
+
+// Ensure posts directory exists
+if (!fs.existsSync(postsDir)) {
+  fs.mkdirSync(postsDir, { recursive: true });
+}
+
+const topics: Topic[] = JSON.parse(fs.readFileSync(topicsPath, 'utf-8'));
+const affiliates: AffiliateProduct[] = JSON.parse(fs.readFileSync(affiliatesPath, 'utf-8'));
+
+// Generate slug from title
+function generateSlug(title: string): string {
   return title
     .toLowerCase()
     .replace(/[^a-z0-9\s-]/g, '')
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-')
     .trim();
-};
+}
 
-const getRandomAffiliateSkus = (count: number = 2): string[] => {
+// Generate publish date (staggered every 2-3 days starting tomorrow)
+function generatePublishDate(index: number): string {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  
+  // Add 2-3 days for each post
+  const publishDate = new Date(tomorrow);
+  publishDate.setDate(publishDate.getDate() + (index * (2 + (index % 2))));
+  
+  return publishDate.toISOString().split('T')[0];
+}
+
+// Generate random affiliate products
+function getRandomAffiliates(count: number = 2): string[] {
   const shuffled = [...affiliates].sort(() => 0.5 - Math.random());
   return shuffled.slice(0, count).map(a => a.sku);
-};
+}
 
-const generatePostContent = (topic: Topic): string => {
-  const randomSkus = getRandomAffiliateSkus();
+// Generate post content template
+function generatePostContent(topic: Topic, affiliateSkus: string[]): string {
+  const affiliateProducts = affiliates.filter(a => affiliateSkus.includes(a.sku));
   
   return `---
 title: "${topic.title}"
-excerpt: "Comprehensive guide covering ${topic.title.toLowerCase()} with practical tips and expert insights"
-coverImage: "/images/${generateSlug(topic.title)}.jpg"
-publishAt: "{{PUBLISH_DATE}}"
-tags: ${JSON.stringify(topic.tags)}
-affiliateSkus: ${JSON.stringify(randomSkus)}
+slug: "${generateSlug(topic.title)}"
+excerpt: "${topic.excerpt}"
+coverImage: "/images/posts/${generateSlug(topic.title)}.jpg"
+tags: [${topic.tags.map(tag => `"${tag}"`).join(', ')}]
+publishAt: "${generatePublishDate(Math.floor(Math.random() * 10))}"
+updatedAt: "${new Date().toISOString().split('T')[0]}"
+readingTime: ${Math.floor(Math.random() * 10) + 5}
+affiliateSkus: [${affiliateSkus.map(sku => `"${sku}"`).join(', ')}]
 ---
 
 # ${topic.title}
 
-This comprehensive guide covers everything you need to know about ${topic.title.toLowerCase()}, providing practical insights for your construction and design projects.
+${topic.excerpt}
 
 ## Key Takeaways
 
-- **Expert insights** from industry professionals
-- **Cost-effective solutions** that fit your budget
-- **Local considerations** for Philippine conditions
-- **Step-by-step guidance** for implementation
-- **Quality standards** to ensure lasting results
+- **Space Efficiency**: Maximize every square meter of your Philippine home
+- **Climate Considerations**: Design for tropical weather and humidity
+- **Budget Optimization**: Smart choices that save money without compromising quality
+- **Local Context**: Solutions that work specifically for Philippine conditions
 
-## Cost Analysis
+## Cost Breakdown
 
-| Category | Budget Option | Standard Option | Premium Option |
-|----------|---------------|-----------------|----------------|
-| Materials | ₱15,000 - ₱25,000 | ₱25,000 - ₱45,000 | ₱45,000 - ₱80,000 |
-| Labor | ₱8,000 - ₱15,000 | ₱15,000 - ₱25,000 | ₱25,000 - ₱40,000 |
-| Total | ₱23,000 - ₱40,000 | ₱40,000 - ₱70,000 | ₱70,000 - ₱120,000 |
+| Item | Basic | Standard | Premium |
+|------|-------|----------|---------|
+| Materials | ₱15,000/sqm | ₱25,000/sqm | ₱40,000/sqm |
+| Labor | ₱8,000/sqm | ₱12,000/sqm | ₱18,000/sqm |
+| Finishes | ₱5,000/sqm | ₱10,000/sqm | ₱20,000/sqm |
+| **Total** | **₱28,000/sqm** | **₱47,000/sqm** | **₱78,000/sqm** |
 
-*Prices may vary based on location, materials, and contractor rates*
+## Practical Tips
 
-## Practical Implementation Tips
+1. **Start with a Plan**: Always begin with detailed planning and measurements
+2. **Consider the Climate**: Choose materials that handle humidity and heat well
+3. **Think Long-term**: Invest in quality where it matters most
+4. **Local Expertise**: Work with contractors who understand Philippine conditions
+5. **Flexible Design**: Create spaces that can adapt to changing needs
 
-### 1. Planning Phase
-- Assess your specific needs and requirements
-- Research local building codes and regulations
-- Get multiple quotes from qualified contractors
-- Create a detailed timeline and budget
+## Product Recommendations
 
-### 2. Material Selection
-- Choose appropriate materials for your climate
-- Balance cost with quality and durability
-- Consider long-term maintenance requirements
-- Source from reputable local suppliers
+${affiliateProducts.map(product => `
+### ${product.title}
+${product.description || 'Essential tool for your project'}
+- **Price**: ${product.price}
+- **Source**: [${product.source}](${product.url})
+`).join('\n')}
 
-### 3. Quality Control
-- Regular inspections during construction
-- Verify all work meets building standards
-- Document progress with photos
-- Address issues immediately as they arise
+## Next Steps
 
-## Common Challenges and Solutions
+Ready to start your project? Use our [AI Designer](/ai-designer) tool to create custom floor plans, or explore our [Tools](/tools) page for calculators and estimators.
 
-Understanding potential challenges helps you prepare better and avoid costly mistakes during your project.
+For more guidance, check out our other guides in the [Blog](/blog) section.
+`;
+}
 
-### Budget Management
-- Always include a 10-15% contingency fund
-- Track expenses carefully throughout the project
-- Prioritize essential features over nice-to-haves
-- Consider phased implementation for larger projects
+// Generate posts
+console.log('Generating posts from topics...');
 
-### Weather Considerations
-- Plan construction timing around weather patterns
-- Protect materials and work areas from rain
-- Allow for weather-related delays in scheduling
-- Use appropriate weather-resistant materials
-
-## Professional vs DIY Considerations
-
-While some aspects can be handled as DIY projects, others require professional expertise for safety and quality.
-
-### DIY-Friendly Tasks
-- Basic planning and research
-- Material sourcing and comparison
-- Simple finishing work
-- Regular maintenance tasks
-
-### Professional Required
-- Structural modifications
-- Electrical and plumbing work
-- Foundation and major construction
-- Building permit applications
-
-## Product Picks
-
-The right tools and materials make a significant difference in project success. Check out our recommended products below for quality solutions that deliver reliable results.`;
-};
-
-const generatePosts = () => {
-  const contentDir = path.join(process.cwd(), 'src/content/posts');
+topics.forEach((topic, index) => {
+  const slug = generateSlug(topic.title);
+  const affiliateSkus = getRandomAffiliates(2);
+  const content = generatePostContent(topic, affiliateSkus);
   
-  // Create content directory if it doesn't exist
-  if (!fs.existsSync(contentDir)) {
-    fs.mkdirSync(contentDir, { recursive: true });
+  const filePath = path.join(postsDir, `${slug}.mdx`);
+  
+  // Only create if file doesn't exist
+  if (!fs.existsSync(filePath)) {
+    fs.writeFileSync(filePath, content);
+    console.log(`✅ Created: ${slug}.mdx`);
+  } else {
+    console.log(`⏭️  Skipped: ${slug}.mdx (already exists)`);
   }
+});
 
-  // Generate dates starting tomorrow, every 2-3 days
-  const startDate = new Date();
-  startDate.setDate(startDate.getDate() + 1); // Start tomorrow
-
-  topics.forEach((topic, index) => {
-    const slug = generateSlug(topic.title);
-    const fileName = `${slug}.mdx`;
-    const filePath = path.join(contentDir, fileName);
-
-    // Skip if file already exists
-    if (fs.existsSync(filePath)) {
-      console.log(`Skipping ${fileName} - already exists`);
-      return;
-    }
-
-    // Calculate publish date (every 2-3 days)
-    const daysToAdd = index * (2 + Math.floor(Math.random() * 2)); // 2-3 days
-    const publishDate = new Date(startDate);
-    publishDate.setDate(startDate.getDate() + daysToAdd);
-
-    // Generate content
-    const content = generatePostContent(topic);
-    const finalContent = content.replace('{{PUBLISH_DATE}}', publishDate.toISOString());
-
-    // Write file
-    fs.writeFileSync(filePath, finalContent, 'utf8');
-    console.log(`Generated: ${fileName} (publish: ${publishDate.toISOString().split('T')[0]})`);
-  });
-
-  console.log(`\nGenerated ${topics.length} blog posts in ${contentDir}`);
-  console.log('Posts are scheduled to publish every 2-3 days starting tomorrow.');
-};
-
-// Run the generator
-generatePosts();
+console.log(`\n🎉 Generated ${topics.length} posts!`);
+console.log('📁 Check the content/posts/ directory for your new MDX files.');

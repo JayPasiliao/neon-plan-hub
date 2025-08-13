@@ -1,20 +1,44 @@
-import affiliatesData from '@/data/affiliates.json';
-
-export interface Affiliate {
+export interface AffiliateProduct {
   sku: string;
   title: string;
+  description?: string;
   url: string;
   image: string;
-  price: string;
+  price?: string;
   source: string;
 }
 
-export const getAffiliatesBySkus = (skus: string[]): Affiliate[] => {
+let affiliatesData: AffiliateProduct[] | null = null;
+
+export async function getAffiliates(): Promise<AffiliateProduct[]> {
+  if (affiliatesData) {
+    return affiliatesData;
+  }
+
+  try {
+    const response = await fetch('/data/affiliates.json');
+    affiliatesData = await response.json();
+    return affiliatesData;
+  } catch (error) {
+    console.error('Failed to load affiliates:', error);
+    return [];
+  }
+}
+
+export function getAffiliatesBySkus(skus: string[]): AffiliateProduct[] {
+  if (!affiliatesData) {
+    return [];
+  }
+  
   return affiliatesData.filter(affiliate => 
     skus.includes(affiliate.sku)
-  ) as Affiliate[];
-};
+  );
+}
 
-export const getAllAffiliates = (): Affiliate[] => {
-  return affiliatesData as Affiliate[];
-};
+export function getAffiliateBySku(sku: string): AffiliateProduct | undefined {
+  if (!affiliatesData) {
+    return undefined;
+  }
+  
+  return affiliatesData.find(affiliate => affiliate.sku === sku);
+}

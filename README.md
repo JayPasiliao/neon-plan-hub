@@ -1,187 +1,192 @@
 # Home Design & Planning Hub
 
-A modern, income-ready web application for architecture and construction planning, built with React, Vite, TypeScript, and Tailwind CSS.
+A comprehensive platform for Philippine home design and construction planning, featuring AI-powered floor plan generation, professional tools, and expert guidance.
 
 ## 🚀 Features
 
-- **Dark Neon Design**: Modern UI with lime accent colors and grid backgrounds
-- **Monetization Ready**: AdSense integration and affiliate product system
-- **Professional Tools**: Construction calculators and planning tools
-- **Content Management**: Blog system with auto-publishing
-- **SEO Optimized**: Meta tags, structured data, and performance optimized
+- **AI Floor Plan Designer** - Generate custom floor plans using AI or local algorithms
+- **Professional Tools** - Construction calculators and planning utilities
+- **Expert Blog** - Comprehensive guides and tips for Philippine construction
+- **Affiliate System** - Integrated product recommendations
+- **AdSense Ready** - Built-in advertising support
+- **SEO Optimized** - Sitemap, RSS feeds, and meta tags
 
-## 💰 Monetization Features
+## 🛠️ Tech Stack
 
-### AdSense Integration
-Set your AdSense client ID to enable ads:
-```bash
-# Add to your environment
-VITE_ADSENSE_CLIENT=ca-pub-your-client-id
-```
+- **Frontend**: React 18 + TypeScript + Vite
+- **Styling**: Tailwind CSS + shadcn/ui components
+- **Routing**: React Router v6
+- **Content**: MDX with frontmatter
+- **3D Graphics**: Three.js (coming soon)
+- **Build Tool**: Vite
 
-Ad slots are automatically placed:
-- Home page: after hero, after tools, after guides
-- Blog list: top and bottom of page
-- Blog posts: after intro and near end
-- Tools page: between calculators
+## 📦 Installation
 
-### Affiliate System
-Edit `/src/data/affiliates.json` to add your affiliate products:
-```json
-{
-  "sku": "unique-id",
-  "title": "Product Name",
-  "url": "https://affiliate-link.com",
-  "image": "product-image-url",
-  "price": "₱1,299",
-  "source": "Lazada"
-}
-```
+1. **Clone the repository**
+   ```bash
+   git clone <your-repo-url>
+   cd neon-plan-hub-2
+   ```
 
-Add `affiliateSkus` to blog post frontmatter to display products:
-```yaml
-affiliateSkus: ["lazada-laser-meter", "shopee-wall-table"]
-```
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-## 📝 Blog & Content
+3. **Set up environment variables**
+   Create a `.env` file in the root directory:
+   ```env
+   VITE_ADSENSE_CLIENT=your-adsense-client-id
+   VITE_GA_ID=your-google-analytics-id
+   VITE_OPENAI_API_KEY=your-openai-api-key
+   ```
 
-### Auto-Publishing
-Posts with `publishAt` dates in the future remain hidden until the publish date. The system automatically shows only published content.
+4. **Generate content**
+   ```bash
+   npm run gen:posts
+   npm run gen:sitemap
+   npm run gen:rss
+   ```
 
-### Blog Structure
-- Posts: `/src/content/posts/*.mdx`
-- Frontmatter required: `title`, `excerpt`, `coverImage`, `publishAt`, `tags`
-- Optional: `affiliateSkus` for product recommendations
+5. **Start development server**
+   ```bash
+   npm run dev
+   ```
 
-### Generate Bulk Posts
-```bash
-npm run gen:posts
-```
-Creates 40+ posts from topics in `/src/data/topics.json`, scheduled every 2-3 days starting tomorrow.
+## 🔧 Available Scripts
 
-## 🛠️ Tools
-
-The tools page includes three calculators:
-
-1. **Lot to Sample Plan**: Estimates usable area and suggests layouts
-2. **Room Dimension Calculator**: Calculates area and furniture recommendations  
-3. **Construction Budget Estimator**: Estimates costs with PHP/USD conversion
-
-## 📊 Analytics & SEO
-
-### Google Analytics
-```bash
-VITE_GA_ID=GA_MEASUREMENT_ID
-```
-
-### SEO Features
-- Automatic meta tags and Open Graph
-- Semantic HTML structure
-- Performance optimized images
-- Clean URLs and proper navigation
-
-## 🚀 Development
-
-### Setup
-```bash
-npm install
-npm run dev
-```
-
-### Environment Variables
-```bash
-# Optional - for monetization
-VITE_ADSENSE_CLIENT=ca-pub-your-client-id
-VITE_GA_ID=GA_MEASUREMENT_ID
-```
-
-### Build
-```bash
-npm run build
-npm run preview
-```
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run gen:posts` - Generate blog posts from topics
+- `npm run gen:sitemap` - Generate XML sitemap
+- `npm run gen:rss` - Generate RSS feed
 
 ## 📁 Project Structure
 
 ```
-src/
-├── components/          # Reusable UI components
-├── pages/              # Route components
-├── data/               # JSON data files
-├── content/posts/      # Blog posts (MDX)
-├── lib/               # Utilities and helpers
-└── assets/            # Images and static files
-
-scripts/
-└── generate-posts.ts   # Bulk post generator
+neon-plan-hub-2/
+├── src/
+│   ├── components/          # Reusable UI components
+│   ├── pages/              # Page components
+│   ├── lib/                # Utility libraries
+│   ├── types/              # TypeScript type definitions
+│   └── hooks/              # Custom React hooks
+├── content/
+│   ├── posts/              # MDX blog posts
+│   └── topics.json         # Post generation topics
+├── public/
+│   ├── data/               # Static data files
+│   └── images/             # Public images
+└── scripts/                # Build and generation scripts
 ```
 
-## 🎨 Design System
+## 🎨 Customization
 
-The design uses semantic tokens defined in `src/index.css`:
-- Colors: HSL values for dark neon theme
-- Gradients: Accent-based gradients
-- Typography: Inter (body) + Plus Jakarta Sans (headings)
-- Components: Consistent spacing and hover effects
+### Styling
+The project uses Tailwind CSS with a custom dark neon theme. Colors and styling can be modified in:
+- `tailwind.config.ts` - Tailwind configuration
+- `src/index.css` - Global styles and CSS variables
 
-## 🌐 Deployment
+### Content
+- **Blog Posts**: Edit `content/topics.json` and run `npm run gen:posts`
+- **Affiliate Products**: Modify `public/data/affiliates.json`
+- **Navigation**: Update `src/components/SiteHeader.tsx`
 
-### Vercel (Recommended)
-1. Connect your GitHub repository
-2. Set environment variables in Vercel dashboard
-3. Deploy automatically on push
+### AI Integration
+- **OpenAI**: Set `VITE_OPENAI_API_KEY` for AI-powered floor plan generation
+- **Local Generation**: Always available as fallback
 
-### Build Outputs
-- Static files: `dist/`
-- Optimized for modern browsers
-- Code splitting and lazy loading enabled
+## 📊 SEO & Analytics
 
-## 📈 Income Optimization
+### Google Analytics
+Set `VITE_GA_ID` to enable Google Analytics tracking.
 
-### AdSense Best Practices
-- Content quality drives approval and revenue
-- Strategic ad placement for user experience
-- Mobile-optimized responsive ads
+### AdSense
+Set `VITE_ADSENSE_CLIENT` to enable AdSense ads. Ad slots are automatically placed throughout the site.
 
-### Affiliate Strategy
-- Choose products relevant to your audience
-- Honest reviews and recommendations
-- Clear disclosure of affiliate relationships
+### Sitemap & RSS
+- **Sitemap**: Automatically generated at `/sitemap.xml`
+- **RSS Feed**: Available at `/rss.xml`
+- **Robots.txt**: Configured for search engine crawling
 
-### Content Strategy
-- Regular publishing schedule (automated)
-- SEO-optimized content
-- Local market focus (Philippines)
+## 🏗️ AI Designer Features
 
-## 🔧 Customization
+### Floor Plan Generation
+- **AI Mode**: Uses OpenAI GPT-4 for intelligent room layouts
+- **Local Mode**: Algorithm-based generation without API calls
+- **Customizable**: Lot dimensions, storeys, room requirements
 
-### Adding New Tools
-1. Create calculator component in `/src/pages/Tools.tsx`
-2. Add form inputs and calculation logic
-3. Style with existing design system
+### Export Options
+- **2D Plans**: SVG and PNG formats
+- **3D Models**: glTF format (coming soon)
+- **Statistics**: Area calculations and efficiency metrics
 
-### Custom Affiliate Sources
-1. Update `/src/data/affiliates.json`
-2. Add new source logos/branding
-3. Update tracking parameters
+## 💰 Monetization
 
-### Blog Customization
-1. Modify post templates in `/scripts/generate-posts.ts`
-2. Add new topics in `/src/data/topics.json`
-3. Customize styling in blog components
+### AdSense Integration
+- Automatic ad placement throughout the site
+- Responsive ad units
+- Environment-gated loading
 
-## 📄 License
+### Affiliate System
+- Product recommendations in blog posts
+- Multiple marketplace support (Lazada, Shopee, Amazon)
+- Commission tracking ready
 
-MIT License - feel free to use for commercial projects.
+## 🚀 Deployment
+
+### Build for Production
+```bash
+npm run build
+```
+
+### Deploy to Vercel/Netlify
+The project is configured for modern deployment platforms. Simply connect your repository and deploy.
+
+### Environment Variables
+Ensure all required environment variables are set in your deployment platform.
+
+## 📱 Responsive Design
+
+- **Mobile First**: Optimized for all screen sizes
+- **PWA Ready**: Progressive Web App capabilities
+- **Touch Friendly**: Optimized for mobile interactions
+
+## 🔒 Security
+
+- **Environment Variables**: Sensitive data stored in `.env`
+- **Input Validation**: Form inputs properly validated
+- **XSS Protection**: Content safely rendered
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create feature branch
-3. Commit changes
-4. Push to branch
-5. Open pull request
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🆘 Support
+
+For support and questions:
+- Create an issue in the repository
+- Check the documentation
+- Review the code examples
+
+## 🎯 Roadmap
+
+- [ ] Full Three.js 3D integration
+- [ ] Advanced AI room optimization
+- [ ] User accounts and saved designs
+- [ ] Mobile app development
+- [ ] Multi-language support
+- [ ] Advanced analytics dashboard
 
 ---
 
-Built with ❤️ for the Philippine construction and design community.
+Built with ❤️ for the Philippine construction community

@@ -5,68 +5,40 @@ import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
 import { Badge } from "@/components/Badge";
 import { AdSlot } from "@/components/AdSlot";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getRecentPosts } from "@/lib/posts";
+import { PostMetadata } from "@/lib/posts";
 import dashboardHero from "@/assets/dashboard-hero.jpg";
 import mobileApp from "@/assets/mobile-app.jpg";
 import featureHouse from "@/assets/feature-house.jpg";
 
 const Index = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [guides, setGuides] = useState<PostMetadata[]>([]);
+
+  useEffect(() => {
+    const recentPosts = getRecentPosts(6);
+    setGuides(recentPosts);
+  }, []);
 
   const tools = [
     {
-      title: "Dream AI",
-      description: "Generate fast concept briefs for small lots.",
+      title: "AI Designer",
+      description: "Generate custom floor plans with AI or local algorithms.",
       icon: "🏗️",
+      href: "/ai-designer",
     },
     {
-      title: "Style Match AI", 
-      description: "Extract color and material palette from a photo.",
-      icon: "🎨",
-    },
-    {
-      title: "Exact Render AI",
-      description: "Room sizing tips with budget bands.",
+      title: "Tools & Calculators", 
+      description: "Budget estimators and planning tools for your project.",
       icon: "📐",
-    },
-  ];
-
-  const guides = [
-    {
-      title: "Modern Minimalist Homes in the Philippines",
-      excerpt: "Complete guide to designing contemporary homes that fit the tropical climate.",
-      image: featureHouse,
-      tag: "Architecture",
+      href: "/tools",
     },
     {
-      title: "Budget Planning for Small Lot Construction",
-      excerpt: "Smart strategies to maximize your construction budget on limited space.",
-      image: featureHouse,
-      tag: "Budget",
-    },
-    {
-      title: "Sustainable Materials for Philippine Climate",
-      excerpt: "Eco-friendly building materials that perform well in tropical conditions.",
-      image: featureHouse,
-      tag: "Materials",
-    },
-    {
-      title: "Space Optimization Techniques",
-      excerpt: "Creative solutions to make small spaces feel larger and more functional.",
-      image: featureHouse,
-      tag: "Design",
-    },
-    {
-      title: "Ventilation Design for Hot Climate",
-      excerpt: "Natural cooling strategies for comfortable living without high energy costs.",
-      image: featureHouse,
-      tag: "Climate",
-    },
-    {
-      title: "Modern Filipino Architectural Elements",
-      excerpt: "Incorporating traditional Filipino design into contemporary architecture.",
-      image: featureHouse,
-      tag: "Culture",
+      title: "Expert Guides",
+      description: "Comprehensive guides and tips from industry professionals.",
+      icon: "📚",
+      href: "/blog",
     },
   ];
 
@@ -174,8 +146,10 @@ const Index = () => {
                 <p className="text-text-muted mb-6">
                   {tool.description}
                 </p>
-                <Button variant="soft" className="w-full">
-                  Try Tool
+                <Button variant="soft" className="w-full" asChild>
+                  <a href={tool.href}>
+                    Try Tool
+                  </a>
                 </Button>
               </Card>
             ))}
@@ -298,13 +272,15 @@ const Index = () => {
               <Card key={index} hover>
                 <div className="aspect-video mb-4 rounded-lg overflow-hidden bg-muted">
                   <img 
-                    src={guide.image} 
+                    src={guide.coverImage} 
                     alt={guide.title}
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <div className="mb-3">
-                  <Badge variant="accent">{guide.tag}</Badge>
+                <div className="mb-3 flex flex-wrap gap-2">
+                  {guide.tags.slice(0, 2).map(tag => (
+                    <Badge key={tag} variant="accent">{tag}</Badge>
+                  ))}
                 </div>
                 <h3 className="font-heading text-lg font-semibold text-text mb-2">
                   {guide.title}
@@ -312,8 +288,10 @@ const Index = () => {
                 <p className="text-text-muted text-sm mb-4">
                   {guide.excerpt}
                 </p>
-                <Button variant="ghost" size="sm">
-                  Read guide →
+                <Button variant="ghost" size="sm" asChild>
+                  <a href={`/blog/${guide.slug}`}>
+                    Read guide →
+                  </a>
                 </Button>
               </Card>
             ))}

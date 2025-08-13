@@ -6,60 +6,31 @@ import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
 import { Badge } from "@/components/Badge";
 import { AdSlot } from "@/components/AdSlot";
-import { useSearchParams } from "react-router-dom";
-
-// Mock blog data - in real app this would come from MDX files
-const mockPosts = [
-  {
-    slug: "maximizing-small-lot-design",
-    title: "Maximizing Small Lot Design in Metro Manila",
-    excerpt: "Complete guide to designing functional homes on small urban lots in Metro Manila",
-    coverImage: "/images/small-lot-design.jpg",
-    publishAt: "2024-12-01T10:00:00Z",
-    tags: ["small-spaces", "urban", "philippines"]
-  },
-  {
-    slug: "budget-friendly-materials",
-    title: "Budget-Friendly Materials for Philippine Climate",
-    excerpt: "Smart material choices that perform well in tropical conditions without breaking the bank",
-    coverImage: "/images/materials.jpg",
-    publishAt: "2024-12-05T10:00:00Z",
-    tags: ["materials", "budget", "climate"]
-  },
-  {
-    slug: "ventilation-strategies",
-    title: "Ventilation Strategies for Hot and Humid Weather",
-    excerpt: "Natural cooling techniques that reduce energy costs and improve comfort",
-    coverImage: "/images/ventilation.jpg",
-    publishAt: "2024-12-10T10:00:00Z",
-    tags: ["ventilation", "climate", "cooling"]
-  }
-];
+import { useSearchParams, Link } from "react-router-dom";
+import { getPublishedPosts, getPostsByTag } from "@/lib/posts";
+import { PostMetadata } from "@/lib/posts";
 
 const Blog = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [posts, setPosts] = useState(mockPosts);
-  const [filteredPosts, setFilteredPosts] = useState(mockPosts);
+  const [posts, setPosts] = useState<PostMetadata[]>([]);
+  const [filteredPosts, setFilteredPosts] = useState<PostMetadata[]>([]);
   
   const currentPage = parseInt(searchParams.get('page') || '1');
   const selectedTag = searchParams.get('tag') || '';
   const postsPerPage = 10;
 
-  const allTags = Array.from(new Set(posts.flatMap(post => post.tags)));
-
   useEffect(() => {
-    let filtered = posts.filter(post => {
-      const publishDate = new Date(post.publishAt);
-      const now = new Date();
-      return publishDate <= now; // Only show published posts
-    });
-
+    let filtered = getPublishedPosts();
+    
     if (selectedTag) {
-      filtered = filtered.filter(post => post.tags.includes(selectedTag));
+      filtered = getPostsByTag(selectedTag);
     }
 
+    setPosts(filtered);
     setFilteredPosts(filtered);
-  }, [posts, selectedTag]);
+  }, [selectedTag]);
+
+  const allTags = Array.from(new Set(posts.flatMap(post => post.tags)));
 
   const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
   const startIndex = (currentPage - 1) * postsPerPage;
@@ -148,8 +119,10 @@ const Blog = () => {
                   {post.excerpt}
                 </p>
                 <div className="flex justify-between items-center">
-                  <Button variant="ghost" size="sm">
-                    Read more →
+                  <Button variant="ghost" size="sm" asChild>
+                    <Link to={`/blog/${post.slug}`}>
+                      Read more →
+                    </Link>
                   </Button>
                   <span className="text-text-muted text-xs">
                     {new Date(post.publishAt).toLocaleDateString()}

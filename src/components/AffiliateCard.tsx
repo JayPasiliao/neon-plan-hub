@@ -1,5 +1,6 @@
-import { Card } from "./Card";
-import { Button } from "./Button";
+import { ExternalLink } from 'lucide-react';
+import { Card } from './Card';
+import { Button } from './Button';
 
 interface AffiliateCardProps {
   title: string;
@@ -11,7 +12,7 @@ interface AffiliateCardProps {
   source: string;
 }
 
-export const AffiliateCard = ({
+export const AffiliateCard: React.FC<AffiliateCardProps> = ({
   title,
   description,
   image,
@@ -19,41 +20,58 @@ export const AffiliateCard = ({
   ctaText = "View",
   url,
   source
-}: AffiliateCardProps) => {
-  const handleClick = () => {
-    window.open(url, '_blank', 'noopener,noreferrer');
-  };
-
+}) => {
   return (
-    <Card hover className="group h-full flex flex-col">
-      <div className="aspect-square mb-4 rounded-lg overflow-hidden bg-muted">
+    <Card hover className="group relative overflow-hidden">
+      {/* Image */}
+      <div className="aspect-video mb-4 rounded-lg overflow-hidden bg-muted">
         <img 
           src={image} 
           alt={title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-          loading="lazy"
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
       </div>
-      <div className="flex-1 flex flex-col">
-        <h3 className="font-heading font-semibold text-lg mb-2 line-clamp-2">{title}</h3>
-        {description && (
-          <p className="text-text-muted text-sm mb-4 flex-1">{description}</p>
-        )}
-        <div className="mt-auto">
-          <div className="flex items-center justify-between mb-3">
-            {price && <span className="text-accent font-bold text-lg">{price}</span>}
-            <span className="text-text-muted text-xs">via {source}</span>
-          </div>
-          <Button 
-            variant="primary" 
-            size="sm"
-            className="w-full"
-            onClick={handleClick}
-          >
-            {ctaText} →
-          </Button>
-        </div>
+
+      {/* Source badge */}
+      <div className="absolute top-2 right-2">
+        <span className="bg-accent/20 text-accent text-xs px-2 py-1 rounded-full font-medium">
+          {source}
+        </span>
       </div>
+
+      {/* Content */}
+      <div className="mb-4">
+        <h3 className="font-heading text-lg font-semibold text-text mb-2 line-clamp-2">
+          {title}
+        </h3>
+        {description && (
+          <p className="text-text-muted text-sm mb-3 line-clamp-2">
+            {description}
+          </p>
+        )}
+        {price && (
+          <p className="text-accent font-semibold text-lg mb-3">
+            {price}
+          </p>
+        )}
+      </div>
+
+      {/* CTA Button */}
+      <Button 
+        variant="soft" 
+        className="w-full group-hover:bg-accent group-hover:text-background transition-all duration-300"
+        asChild
+      >
+        <a 
+          href={url} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-2"
+        >
+          {ctaText}
+          <ExternalLink className="w-4 h-4" />
+        </a>
+      </Button>
     </Card>
   );
 };

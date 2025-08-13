@@ -1,69 +1,69 @@
-import { useEffect } from "react";
-
-declare global {
-  interface Window {
-    adsbygoogle: any[];
-  }
-}
+import { useEffect, useState } from 'react';
+import { cn } from '@/lib/utils';
 
 interface AdSlotProps {
   className?: string;
-  slot?: string;
+  style?: React.CSSProperties;
 }
 
-export const AdSlot = ({ className, slot = "auto" }: AdSlotProps) => {
-  const adsenseClient = import.meta.env.VITE_ADSENSE_CLIENT;
+// Load AdSense script once
+let adSenseLoaded = false;
 
-  useEffect(() => {
-    if (adsenseClient && window.adsbygoogle) {
-      try {
-        (window.adsbygoogle as any[]).push({});
-      } catch (err) {
-        console.error('AdSense error:', err);
-      }
-    }
-  }, [adsenseClient]);
-
-  // Don't render if no AdSense client ID
-  if (!adsenseClient) {
-    return (
-      <div className={`bg-muted/20 border border-border rounded-lg p-4 text-center ${className || ''}`}>
-        <p className="text-text-muted text-sm mb-2">Advertisement</p>
-        <div className="h-24 bg-muted/10 rounded flex items-center justify-center">
-          <span className="text-text-muted text-xs">Ad Space - Set VITE_ADSENSE_CLIENT</span>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className={`text-center ${className || ''}`}>
-      <ins 
-        className="adsbygoogle"
-        style={{ display: 'block' }}
-        data-ad-client={adsenseClient}
-        data-ad-slot={slot}
-        data-ad-format="auto"
-        data-full-width-responsive="true"
-      />
-    </div>
-  );
-};
-
-// AdSense script loader - call this once in your app
-export const loadAdSenseScript = () => {
-  const adsenseClient = import.meta.env.VITE_ADSENSE_CLIENT;
+const loadAdSenseScript = () => {
+  if (adSenseLoaded) return;
   
-  if (!adsenseClient || document.querySelector('[data-ad-client]')) {
+  const client = import.meta.env.VITE_ADSENSE_CLIENT;
+  if (!client) return;
+
+  // Check if script already exists
+  if (document.querySelector('script[src*="pagead2.googlesyndication.com"]')) {
+    adSenseLoaded = true;
     return;
   }
 
   const script = document.createElement('script');
   script.async = true;
-  script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`;
-  script.crossOrigin = "anonymous";
+  script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
+  script.setAttribute('data-ad-client', client);
+  script.crossOrigin = 'anonymous';
+  
   document.head.appendChild(script);
-
-  // Initialize adsbygoogle array
-  (window.adsbygoogle = window.adsbygoogle || []);
+  adSenseLoaded = true;
 };
+
+export const AdSlot: React.FC<AdSlotProps> = ({ className, style }) => {
+  const [isClient, setIsClient] = useState(false);
+  const client = import.meta.env.VITE_ADSENSE_CLIENT;
+
+  useEffect(() => {
+    setIsClient(true);
+    if (client) {
+      loadAdSenseScript();
+    }
+  }, [client]);
+
+  // Don't render on server or if no client ID
+  if (!isClient || !client) {
+    return null;
+  }
+
+  return (
+    <div className={cn("ad-slot my-8", className)} style={style}>
+      {/* TODO: Replace with your actual AdSense ad unit ID */}
+      <ins
+        className="adsbygoogle"
+        style={{ display: 'block' }}
+        data-ad-client={client}
+        data-ad-slot="YOUR_AD_SLOT_ID_HERE" // TODO: Replace with actual slot ID
+        data-ad-format="auto"
+        data-full-width-responsive="true"
+      />
+      <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+  );
+};
+
+// Export for use in App.tsx
+export { loadAdSenseScript };
